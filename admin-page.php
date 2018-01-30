@@ -20,7 +20,7 @@ $args     = array(
             <input
                     type="date"
                     id="time-start"
-                    value="<?php echo date( "Y-m-d\T00:00", time() ); ?>">
+                    value="<?php echo date( "Y-m-d", time() ); ?>">
             <input id="fb-start" type="submit" value="Начать" class="button button-primary">
             <input id="fb-stop" type="submit" value="Остановить" class="button">
         </p>
