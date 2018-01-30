@@ -29,7 +29,7 @@ class IR_Facebook_Comments_Counter {
 		if ( ! $this->can_parse() ) {
 			exit();
 		}
-		$date = $_POST['date'];
+		$date = $_POST['date'] . ' 00:00:00';
 		$res  = $this->parsing( $date );
 		wp_send_json( $res );
 	}
@@ -40,8 +40,7 @@ class IR_Facebook_Comments_Counter {
 	 * @return array
 	 */
 	function parsing( $date_str ) {
-		$date = DateTime::createFromFormat( 'Y-m-d H:i:s', $date_str );
-		$post = $this->get_post_after( $date );
+		$post = $this->get_post_after( $date_str );
 		if ( $post ) {
 			$url       = get_permalink( $post->ID );
 			$info      = $this->get_facebook_info( $url );
@@ -67,15 +66,13 @@ class IR_Facebook_Comments_Counter {
 	/**
 	 * Returns first post after datetime
 	 *
-	 * @param DateTime $date
+	 * @param string $date "Y-m-d H:i:s"
 	 *
 	 * @return object | null
 	 */
 	private function get_post_after( $date ) {
 		global $wpdb;
-
-		$date_sql = $date->format( "Y-m-d H:i:s" );
-		$sql      = "SELECT * FROM {$wpdb->posts} WHERE post_date > '{$date_sql}' AND post_type = 'post' AND post_status = 'publish' ORDER BY post_modified ASC LIMIT 1";
+		$sql = "SELECT * FROM {$wpdb->posts} WHERE post_date > '{$date}' AND post_type = 'post' AND post_status = 'publish' ORDER BY post_modified ASC LIMIT 1";
 
 		return $wpdb->get_row( $sql );
 	}
