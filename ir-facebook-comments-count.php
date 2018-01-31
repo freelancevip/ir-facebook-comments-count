@@ -108,7 +108,7 @@ class IR_Facebook_Comments_Counter {
 		add_menu_page( 'FB comments', 'FB comments', 'activate_plugins', 'fb-comments-count', array(
 			$this,
 			'menu_cb'
-		), null, 6 );
+		), 'dashicons-megaphone', 6 );
 	}
 
 	/**
