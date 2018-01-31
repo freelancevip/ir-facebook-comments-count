@@ -11,6 +11,9 @@ $args     = array(
 
 ?>
 <div class="wrap" id="fb-comments-count-container">
+    <div id="fb-comments-count-loader">
+        <div class="fb-comments-count-loader"></div>
+    </div>
     <h1>Записи по количеству комментариев facebook</h1>
     <form action="">
         <p>
@@ -71,3 +74,49 @@ $args     = array(
 		?>
     </table>
 </div>
+<style>
+    #fb-comments-count-container {
+        position: relative;
+    }
+
+    #fb-comments-count-loader {
+        position: fixed;
+        top: -10px;
+        left: -23px;
+        right: -20px;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 1000;
+        display: none;
+    }
+
+    .fb-comments-count-loader {
+        border: 16px solid #f3f3f3;
+        border-radius: 50%;
+        border-top: 16px solid #3498db;
+        width: 120px;
+        height: 120px;
+        -webkit-animation: spin 2s linear infinite;
+        animation: spin 2s linear infinite;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-left: -60px;
+        margin-top: -60px;
+        z-index: 1001;
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    #fb-stop {
+        z-index: 10002;
+        position: relative;
+    }
+</style>

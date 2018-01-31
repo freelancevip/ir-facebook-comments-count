@@ -7,15 +7,10 @@ jQuery(document).ready(function ($) {
     var active = true,
         timerSelector = "#time-start",
         curDate = $(timerSelector).val();
-    
-    $("#fb-continue").click(function (e) {
-        e.preventDefault();
-        active = true;
-        parsing();
-    });
+
     $("#fb-start").click(function (e) {
         e.preventDefault();
-        $("#fb-message").append("<p>Парсинг начался</p>");
+        $("#fb-comments-count-loader").show();
         active = true;
         parsing();
     });
@@ -30,6 +25,7 @@ jQuery(document).ready(function ($) {
     function stop(message) {
         message = message || "Парсинг остановлен";
         alert(message);
+        $("#fb-comments-count-loader").hide();
         active = false;
     }
 
