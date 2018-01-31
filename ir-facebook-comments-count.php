@@ -15,57 +15,40 @@ $IR_Facebook_Comments_Counter = new IR_Facebook_Comments_Counter();
  * Class IR_Facebook_Comments_Counter
  */
 class IR_Facebook_Comments_Counter {
-	const SITE_URL = 'http://wordpress.oo/';
+	const SITE_URL = 'https://inforesist.org/';
 
 	/**
 	 * IR_Facebook_Comments_Counter constructor.
 	 */
 	function __construct() {
 		add_action( 'admin_menu', array( $this, 'menu' ) );
-		add_action( 'admin_print_scripts', array( $this, 'scripts' ) );
-		add_action( 'wp_ajax_fb_parser', array( $this, 'ajax_parsing' ) );
-	}
-
-	function ajax_parsing() {
-		if ( ! $this->can_parse() ) {
-			exit();
-		}
-		$date = $_POST['date'] . ' 00:00:00';
-		$res  = $this->parsing( $date );
-		wp_send_json( $res );
 	}
 
 	/**
 	 * @param $date_str
 	 *
-	 * @return array
+	 * @return void
 	 */
 	function parsing( $date_str ) {
-		$urls    = $this->get_posts_after( $date_str );
-		$fb_data = $this->facebook_multiple_info( $urls );
-		if ( $fb_data ) {
-			foreach ( $fb_data as $index => $item ) {
-				$postid    = url_to_postid( $index );
-				$post      = get_post( $postid );
-				$post_date = date( 'Y-m-d H:i:s', strtotime( $post->post_modified ) );
-				update_post_meta( $post->ID, 'comment_count', $item->share->comment_count );
-				update_post_meta( $post->ID, 'share_count', $item->share->share_count );
+		sleep( 5 );
+		$urls = $this->get_posts_after( $date_str );
+		echo "Всего записей за указанный период: " . count( $urls );
+		echo '<br>';
+
+		$url_chunks = array_chunk( $urls, 50 );
+
+		foreach ( $url_chunks as $chunk ) {
+			$fb_data = $this->facebook_multiple_info( $chunk );
+			if ( $fb_data ) {
+				foreach ( $fb_data as $index => $item ) {
+					$postid = url_to_postid( $index );
+					$post   = get_post( $postid );
+					update_post_meta( $post->ID, 'comment_count', $item->share->comment_count );
+					update_post_meta( $post->ID, 'share_count', $item->share->share_count );
+					echo "Для записи {$post->ID} спарсены значения: {$item->share->comment_count}, {$item->share->share_count}";
+				}
 			}
 		}
-		if ( isset( $post_date ) ) {
-			$return = array(
-				'dateNextPost' => $post_date,
-				'status'       => true,
-				'id'           => $postid
-			);
-		} else {
-			$return = array(
-				'message' => 'Все посты обработаны',
-				'status'  => false
-			);
-		}
-
-		return $return;
 	}
 
 	/**
@@ -91,14 +74,14 @@ class IR_Facebook_Comments_Counter {
 	 *
 	 * @return array
 	 */
-	private function get_posts_after( $date, $limit = 50 ) {
+	private function get_posts_after( $date ) {
 		global $wpdb;
-		$sql = "SELECT post_name FROM {$wpdb->posts} WHERE post_date > '{$date}' AND post_type = 'post' AND post_status = 'publish' ORDER BY post_modified ASC LIMIT {$limit}";
+		$sql = "SELECT post_name FROM {$wpdb->posts} WHERE post_date > '{$date}' AND post_type = 'post' AND post_status = 'publish' ORDER BY post_modified ASC LIMIT 3000";
 
 		$results = $wpdb->get_col( $sql );
 
 		return array_map( function ( $name ) {
-			return self::SITE_URL . $name;
+			return self::SITE_URL . $name . '/';
 		}, $results );
 	}
 

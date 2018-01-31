@@ -11,7 +11,8 @@ $args     = array(
 );
 if ( $after ) {
 	$args['date_query'] = array(
-		'after' => $after
+		'after'     => $after,
+		'inclusive' => true
 	);
 }
 ?>
@@ -20,22 +21,6 @@ if ( $after ) {
         <div class="fb-comments-count-loader"></div>
     </div>
     <h1>Записи по количеству комментариев facebook</h1>
-    <form action="">
-        <p>
-            <b>Дата начала парсинга</b>
-        </p>
-        <p>
-            <input
-                    type="date"
-                    id="time-start"
-                    value="<?php echo date( "Y-m-d", time() ); ?>">
-            <input id="fb-start" type="submit" value="Начать" class="button button-primary">
-            <input id="fb-stop" type="submit" value="Остановить" class="button">
-        </p>
-        <div id="fb-message">
-
-        </div>
-    </form>
 	<?php
 	$date  = new DateTime();
 	$day   = $date->modify( '-1 day' )->format( "Y-m-d" );
@@ -56,14 +41,14 @@ if ( $after ) {
     <table class="widefat">
         <thead>
         <tr>
-            <th>Заголовок</th>
-            <th>
-                <a href="tools.php?page=fb-comments-count&meta_key=comment_count&order=<?php echo $order ?>&after=<?php echo $after ?>">comment_count</a>
-            </th>
-            <th>
-                <a href="tools.php?page=fb-comments-count&meta_key=share_count&order=<?php echo $order ?>&after=<?php echo $after ?>">share_count</a>
-            </th>
-            <th>Действие</th>
+            <td>Заголовок</td>
+            <td>
+                <a href="tools.php?page=fb-comments-count&meta_key=comment_count&order=<?php echo $order ?>&after=<?php echo $after ?>">Комментариев</a>
+            </td>
+            <td>
+                <a href="tools.php?page=fb-comments-count&meta_key=share_count&order=<?php echo $order ?>&after=<?php echo $after ?>">Перепосты</a>
+            </td>
+            <td>Действие</td>
         </tr>
         </thead>
 		<?php
@@ -86,7 +71,8 @@ if ( $after ) {
                     <td><?php the_title() ?></td>
                     <td><?php echo $comment_count ?></td>
                     <td><?php echo $share_count ?></td>
-                    <td><a href="<?php the_permalink() ?>"><i class="fa fa-link" aria-hidden="true"></i> Перейти</a>
+                    <td><a target="_blank" href="<?php the_permalink() ?>"><i class="fa fa-link" aria-hidden="true"></i>
+                            Перейти</a>
                     </td>
                 </tr>
 			<?php endwhile; ?>
@@ -97,6 +83,19 @@ if ( $after ) {
     </table>
 </div>
 <style>
+    #fb-comments-count-container td {
+        border-bottom: 1px solid #ddd;
+        border-right: 1px solid #ddd;
+    }
+
+    #fb-comments-count-container tr:hover {
+        background: #f5f5f5;
+    }
+
+    #fb-comments-count-container tr:nth-child(even) {
+        background: #f9f9f9;
+    }
+
     #fb-comments-count-container {
         position: relative;
     }
