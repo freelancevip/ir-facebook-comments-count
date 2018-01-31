@@ -23,19 +23,34 @@ if ( $after ) {
     <h1>Записи по количеству комментариев facebook</h1>
 	<?php
 	$date  = new DateTime();
-	$day   = $date->modify( '-1 day' )->format( "Y-m-d" );
+	$day   = $date->format( "Y-m-d" );
 	$week  = $date->modify( '-1 week' )->format( "Y-m-d" );
 	$month = $date->modify( '-1 month' )->format( "Y-m-d" );
+
+	$uri      = $_SERVER['REQUEST_URI'];
+	$active   = ' button-link-delete';
+	$d_active = '';
+	$w_active = '';
+	$m_active = '';
+	if ( strpos( $uri, $day ) ) {
+		$d_active = $active;
+	}
+	if ( strpos( $uri, $week ) ) {
+		$w_active = $active;
+	}
+	if ( strpos( $uri, $month ) ) {
+		$m_active = $active;
+	}
 	?>
     <div class="button-controls">
-        <a href="tools.php?page=fb-comments-count&meta_key=<?php echo $meta_key ?>&order=<?php echo $order ?>&after=<?php echo $day ?>"
-           class="button">За
+        <a href="admin.php?page=fb-comments-count&meta_key=<?php echo $meta_key ?>&order=<?php echo $order ?>&after=<?php echo $day ?>"
+           class="button<?php echo $d_active ?>">За
             день</a>
-        <a href="tools.php?page=fb-comments-count&meta_key=<?php echo $meta_key ?>&order=<?php echo $order ?>&after=<?php echo $week ?>"
-           class="button">За
+        <a href="admin.php?page=fb-comments-count&meta_key=<?php echo $meta_key ?>&order=<?php echo $order ?>&after=<?php echo $week ?>"
+           class="button<?php echo $w_active ?>">За
             неделю</a>
-        <a href="tools.php?page=fb-comments-count&meta_key=<?php echo $meta_key ?>&order=<?php echo $order ?>&after=<?php echo $month ?>"
-           class="button">За
+        <a href="admin.php?page=fb-comments-count&meta_key=<?php echo $meta_key ?>&order=<?php echo $order ?>&after=<?php echo $month ?>"
+           class="button<?php echo $m_active ?>">За
             месяц</a>
     </div>
     <table class="widefat">
@@ -43,10 +58,10 @@ if ( $after ) {
         <tr>
             <td>Заголовок</td>
             <td>
-                <a href="tools.php?page=fb-comments-count&meta_key=comment_count&order=<?php echo $order ?>&after=<?php echo $after ?>">Комментариев</a>
+                <a href="admin.php?page=fb-comments-count&meta_key=comment_count&order=<?php echo $order ?>&after=<?php echo $after ?>">Комментариев</a>
             </td>
             <td>
-                <a href="tools.php?page=fb-comments-count&meta_key=share_count&order=<?php echo $order ?>&after=<?php echo $after ?>">Перепосты</a>
+                <a href="admin.php?page=fb-comments-count&meta_key=share_count&order=<?php echo $order ?>&after=<?php echo $after ?>">Перепосты</a>
             </td>
             <td>Действие</td>
         </tr>

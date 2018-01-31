@@ -105,10 +105,10 @@ class IR_Facebook_Comments_Counter {
 	 * Add menu item
 	 */
 	function menu() {
-		add_submenu_page( 'tools.php', 'facebook-comments-count', 'FB comments', 'manage_options', 'fb-comments-count', array(
+		add_menu_page( 'FB comments', 'FB comments', 'activate_plugins', 'fb-comments-count', array(
 			$this,
 			'menu_cb'
-		) );
+		), null, 6 );
 	}
 
 	/**
