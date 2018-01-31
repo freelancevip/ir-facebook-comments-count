@@ -1,6 +1,7 @@
 <?php
 $meta_key = isset( $_GET['meta_key'] ) ? $_GET['meta_key'] : 'comment_count';
 $order    = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
+$after    = isset( $_GET['after'] ) ? $_GET['after'] : '';
 $args     = array(
 	'posts_per_page' => 50,
 	'post_status'    => 'publish',
@@ -8,7 +9,11 @@ $args     = array(
 	'orderby'        => 'meta_value_num',
 	'order'          => $order
 );
-
+if ( $after ) {
+	$args['date_query'] = array(
+		'after' => $after
+	);
+}
 ?>
 <div class="wrap" id="fb-comments-count-container">
     <div id="fb-comments-count-loader">
@@ -31,15 +36,32 @@ $args     = array(
 
         </div>
     </form>
+	<?php
+	$date  = new DateTime();
+	$day   = $date->modify( '-1 day' )->format( "Y-m-d" );
+	$week  = $date->modify( '-1 week' )->format( "Y-m-d" );
+	$month = $date->modify( '-1 month' )->format( "Y-m-d" );
+	?>
+    <div class="button-controls">
+        <a href="tools.php?page=fb-comments-count&meta_key=<?php echo $meta_key ?>&order=<?php echo $order ?>&after=<?php echo $day ?>"
+           class="button">За
+            день</a>
+        <a href="tools.php?page=fb-comments-count&meta_key=<?php echo $meta_key ?>&order=<?php echo $order ?>&after=<?php echo $week ?>"
+           class="button">За
+            неделю</a>
+        <a href="tools.php?page=fb-comments-count&meta_key=<?php echo $meta_key ?>&order=<?php echo $order ?>&after=<?php echo $month ?>"
+           class="button">За
+            месяц</a>
+    </div>
     <table class="widefat">
         <thead>
         <tr>
             <th>Заголовок</th>
             <th>
-                <a href="tools.php?page=fb-comments-count&meta_key=comment_count&order=<?php echo $order ?>">comment_count</a>
+                <a href="tools.php?page=fb-comments-count&meta_key=comment_count&order=<?php echo $order ?>&after=<?php echo $after ?>">comment_count</a>
             </th>
             <th>
-                <a href="tools.php?page=fb-comments-count&meta_key=share_count&order=<?php echo $order ?>">share_count</a>
+                <a href="tools.php?page=fb-comments-count&meta_key=share_count&order=<?php echo $order ?>&after=<?php echo $after ?>">share_count</a>
             </th>
             <th>Действие</th>
         </tr>
